@@ -1,0 +1,237 @@
+/* .header_banner{
+    height: 50px;
+    background-color: #4d4d4d;
+}
+.header_banner2{
+    background-color: #ff4d4d;
+    height: 40px;
+}
+.header_banner3{
+    background-color: black;
+    height: 30px;
+    display: flex;
+    justify-content: space-around;
+}
+.img_icon{
+    width: 7px;
+    border-radius: 12px;
+    height: 12px;
+}
+.menu_text{
+    font-size: 10px;
+    color: white;
+}
+.img_container{
+    width: 110px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.menu_container{
+    width: 400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header_banner4{
+    background-color:  #e6e6e6;
+    border-bottom: 1px solid grey;
+    border-top: 1px solid grey;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+}
+.logo{
+    width: 100px;
+    height: 56px;
+}
+.search_box{
+    width: 335px;
+    border-radius: 6px;
+    height: 20px;
+    border: none;
+    box-shadow: 0px 5px 8px 1px #888888;
+}
+.cart{
+    height: 25px;
+    width: 25px;
+}
+.cart_count{
+    font-size: 10px;
+}
+.btn{
+    border-radius: 21px;
+    padding: 4px 16px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    height: 30px;
+}
+.inner_cont{
+    display: flex;
+    align-items: center;
+    width: 80%;
+    justify-content: space-between;
+}
+.cart_text{
+    font-size: 8px;
+    font-weight: bold;
+}
+.banner5{
+    background-color:  #e6e6e6;
+    border-bottom: 1px solid grey;
+    border-top: 1px solid grey;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+}
+.cont5{
+    width: 60%;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+.shop_out_container{
+    background-color:  #e6e6e6;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+}
+.shop_cont{
+    box-shadow: 0px 5px 8px 1px #888888;
+    width: 70%;
+    height: 500px;
+    display: flex;
+}
+.art_img{
+    width: 50%;
+    height: inherit;
+}
+.art_details{
+    width: 50%;
+    background-color: white;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    flex-direction: column;
+}
+.menu_list{
+    font-size: 10px;
+    padding: 5px;
+    text-align: center;
+}
+.normal{
+    height: 25px;
+    border: 1px solid #ff4d4d;
+    width: 80%;
+    border-radius: 45px;
+    color: black;
+    display: flex;
+    font-size: 12px;
+    font-weight: bolder;
+    text-align: center;
+}
+.digital{
+    height: 25px;
+    width: 50%;
+    display: flex;
+    background-color: #ff4d4d;
+    color: white;
+    border-radius: 45px;
+    align-items: center;
+    justify-content: center;
+}
+.norm{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+}
+.dropfile{
+    height: 100px;
+    width: 80%;
+    border: 2px dashed #ff4d4d;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 9px;
+    text-align: center;
+}
+.browse{
+    color: #ff4d4d;
+}
+.print{
+    display: flex;
+    width: 80%;
+    font-size: 12px;
+}
+.photo{
+    width: 50%;
+    background-color: #ff4d4d;
+    color: white;
+    height: 30px;
+    border: 1px solid #ff4d4d;
+}
+.canvas{
+    width: 50%;
+    height: 30px;
+    border: 1px solid #ff4d4d;
+}
+.flex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+@media screen and (max-width: 940px) {
+    .header_banner3{
+        flex-direction: column;
+    align-items: center;
+    height: 50px;
+    }
+    .img_container{
+        width: 20%;
+    }
+    .menu_container{
+        width: 80%;
+    }
+    .inner_cont {
+        width: 100%;
+    }
+}
+@media screen and (max-width: 700px) {
+    .inner_cont{
+        flex-direction: column;
+    }
+    .header_banner4{
+        height: 310px;
+        padding: 10px;
+    }
+    .search_box{
+        width: 50%;
+    }
+    .shop_cont{
+        height: auto;
+    flex-direction: column;
+    width: 96%;
+    align-items: center;
+    }
+    .art_img,.art_details{
+        width: 96%;
+    }
+}
+@media screen and (max-width: 580px) {
+    .cont5{
+        width: 95%;
+    }
+}
+@media screen and (max-width: 360px) {
+    .banner5{
+        height: auto;
+    }
+    .cont5 {
+        flex-direction: column;
+    }
+} */
