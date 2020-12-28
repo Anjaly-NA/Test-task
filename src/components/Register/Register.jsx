@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useHistory } from "react-router";
 import firebase from "../../firebase";
 import ConfirmationPopup from "../common/ConfirmationPopup";
 
@@ -40,7 +39,6 @@ const initialValues = {
 };
 
 const Registration = (props) => {
-  const history = useHistory();
   const [registerResponse, setRegisterResponse] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
   //registering the user to firebase

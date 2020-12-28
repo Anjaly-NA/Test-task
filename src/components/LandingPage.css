@@ -3,9 +3,27 @@
   padding: 0px 30px;
   text-align: center;
 }
-.username{
+.username {
   margin-left: 15px;
 }
-.pagination-container{
+.pagination-container {
   padding: 15px 0px;
+}
+.height-auto {
+  height: auto !important;
+}
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  height: 0px;
+}
+.btn-edit {
+  background-color: dodgerblue !important;
+  margin-left: 20px !important;
+}
+.scroll-height {
+  height: 560px;
+  overflow: scroll;
 }

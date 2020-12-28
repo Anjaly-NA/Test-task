@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useHistory } from "react-router";
 import firebase from "../../firebase";
 import ConfirmationPopup from "../common/ConfirmationPopup";
+import { connect } from "react-redux";
+import CircularSpin from "../common/CircularSpin";
+import { setSpinnerFalse, setSpinnerTrue } from "../../redux";
 
 //validations for the fields
 const SignUpSchema = Yup.object().shape({
@@ -14,31 +16,69 @@ const SignUpSchema = Yup.object().shape({
   date: Yup.date()
     .min(new Date(), "Past dates cannot be allowed")
     .required("Choose a valid date"),
+  file: Yup.mixed().required(),
 });
 
 const initialValues = {
   title: "",
   description: "",
   date: "",
+  file: null,
+  inputFile: null,
 };
 
 const AddEvent = (props) => {
-  const history = useHistory();
   const [eventAddResponse, setEventAddResponse] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
+  const [displayImg, setDisplayImg] = useState(undefined);
 
+  const handleDisplayImage = (event, setFieldValue) => {
+    setFieldValue("file", event.target.files[0]);
+    const file = event.target.files[0];
+    let reader = new FileReader();
+    reader.onloadend = () => {
+      setDisplayImg(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
   /**
    * add event to particular user
-   * @param {Object} values 
+   * @param {Object} values
    */
-  const submitForm = (values) => {
+  const submitForm = async (values) => {
+    props.setSpinnerTrue();
+    const file = values.file;
+    const fileUrl = await firebase.uploadImage(file.name, file);
+    console.log(fileUrl, "fileUrl");
     try {
-      firebase.addEvents(values.title, values.description, values.date);
+      if (props.eventId) {
+        firebase.updateEvent(
+          values.title,
+          values.description,
+          values.date,
+          fileUrl ? fileUrl : props.singleBlog.file,
+          props.eventId
+        );
+      } else {
+        firebase.addEvents(
+          values.title,
+          values.description,
+          values.date,
+          fileUrl,
+          props.eventId
+        );
+      }
+      props.setSpinnerFalse();
       setEventAddResponse(true);
-      setResponseMessage("Event Added Successfully");
+      if (props.eventId) {
+        setResponseMessage("Event Updated Successfully");
+      } else {
+        setResponseMessage("Event Added Successfully");
+      }
     } catch (error) {
       setEventAddResponse(true);
       setResponseMessage(error.message);
+      props.setSpinnerFalse();
     }
   };
 
@@ -58,9 +98,10 @@ const AddEvent = (props) => {
         responseMessage={responseMessage}
       />
       <Formik
-        initialValues={initialValues}
+        initialValues={props.singleBlog || initialValues}
         onSubmit={submitForm}
         validationSchema={SignUpSchema}
+        enableReinitialize
       >
         {(formik) => {
           const {
@@ -72,14 +113,15 @@ const AddEvent = (props) => {
             handleBlur,
             isValid,
             dirty,
+            setFieldValue,
           } = formik;
           return (
             <section className="container">
               <section className="row justify-content-center align-items-center">
-                <section className="col-sm-6 col-md-6 bg col-lg-4">
+                <section className="col-sm-6 col-md-6 bg col-lg-4 scroll-height">
                   <form className="form-container" onSubmit={handleSubmit}>
                     <h4>
-                      Add Event
+                      {props.eventId ? "Edit Event" : "Add Event"}
                       <button type="button" className="close" onClick={onClose}>
                         <span aria-hidden="true">&times;</span>
                         <span className="sr-only">Close</span>
@@ -93,6 +135,11 @@ const AddEvent = (props) => {
                         name="title"
                         id="title"
                         value={values.title}
+                        // value={
+                        //   props.singleBlog.title
+                        //     ? props.singleBlog.title
+                        //     : values.title
+                        // }
                         onChange={handleChange}
                         onBlur={handleBlur}
                         className={
@@ -111,6 +158,7 @@ const AddEvent = (props) => {
                         </small>
                       )}
                     </div>
+                    {props.spinnerValue && <CircularSpin />}
                     <div className="form-group">
                       <label htmlFor="description">Description</label>
                       <textarea
@@ -118,8 +166,12 @@ const AddEvent = (props) => {
                         name="description"
                         id="description"
                         value={values.description}
+                        // value={
+                        //   props.singleBlog.description
+                        //     ? props.singleBlog.description
+                        //     : values.description
+                        // }
                         onChange={handleChange}
-                        onBlur={handleBlur}
                         onBlur={handleBlur}
                         className={
                           errors.description && touched.description
@@ -127,19 +179,6 @@ const AddEvent = (props) => {
                             : "form-control"
                         }
                       ></textarea>
-                      {/* <input
-                        type="text"
-                        name="description"
-                        id="description"
-                        value={values.description}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={
-                          errors.description && touched.description
-                            ? "is-invalid form-control"
-                            : "form-control"
-                        }
-                      /> */}
                       {errors.description && touched.description ? (
                         <small id="emailHelp" className="invalid-feedback">
                           {errors.description}
@@ -157,6 +196,11 @@ const AddEvent = (props) => {
                         name="date"
                         id="date"
                         value={values.date}
+                        // value={
+                        //   props.singleBlog.date
+                        //     ? props.singleBlog.date
+                        //     : values.date
+                        // }
                         onChange={handleChange}
                         onBlur={handleBlur}
                         className={
@@ -171,8 +215,49 @@ const AddEvent = (props) => {
                         </small>
                       ) : (
                         <small id="emailHelp" className="form-text text-muted">
-                          Enter event of Event.
+                          Enter date of Event.
                         </small>
+                      )}
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="description">Image</label>
+                      <input
+                        type="file"
+                        name="file"
+                        id="file"
+                        accept="image/*"
+                        // value={displayImg ? displayImg : props.singleBlog.file}
+                        // onChange={(event) => {
+                        //   setFieldValue("file", event.target.files[0]);
+                        // }}
+                        onChange={(event) =>
+                          handleDisplayImage(event, setFieldValue)
+                        }
+                        onLoad={setFieldValue(values.file)}
+                        // onBlur={handleBlur}
+                        className={
+                          errors.file && touched.file
+                            ? "is-invalid form-control height-auto"
+                            : "form-control height-auto"
+                        }
+                      />
+                      {errors.file && touched.file ? (
+                        <small id="emailHelp" className="invalid-feedback">
+                          {errors.file}
+                        </small>
+                      ) : (
+                        <small id="emailHelp" className="form-text text-muted">
+                          Upload image.
+                        </small>
+                      )}
+                      {(props.singleBlog.file || displayImg) && (
+                        <img
+                          src={displayImg ? displayImg : props.singleBlog.file}
+                          alt="alter"
+                          className="img-thumbnail mt-2"
+                          height={100}
+                          width={100}
+                        />
                       )}
                     </div>
                     <button
@@ -196,4 +281,21 @@ const AddEvent = (props) => {
     </React.Fragment>
   );
 };
-export default AddEvent;
+
+const MapStateToProps = (state) => {
+  return {
+    spinnerValue: state.spinnerValue,
+    addEventBox: state.addEventBox,
+    editEventValue: state.editEventValue,
+  };
+};
+
+const MapDispatchToProps = (dispatch) => {
+  return {
+    setSpinnerFalse: () => dispatch(setSpinnerFalse()),
+    setSpinnerTrue: () => dispatch(setSpinnerTrue()),
+  };
+};
+export default connect(MapStateToProps, MapDispatchToProps)(AddEvent);
+
+// export default AddEvent;

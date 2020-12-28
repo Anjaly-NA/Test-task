@@ -50,12 +50,12 @@ function LandingPage(props) {
       </Modal>
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
         <div className="container">
-          <a className="navbar-brand" href="">
+          <a className="navbar-brand" href="/">
             Events Page
           </a>
           <ul className="navbar-nav ml-auto">
             <li className="nav-item ">
-              <a class="nav-link" href="" onClick={handleOpen}>
+              <a class="nav-link" href="/" onClick={handleOpen}>
                 Sign In
               </a>
             </li>

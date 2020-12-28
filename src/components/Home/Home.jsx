@@ -59,7 +59,7 @@ const Home = () => {
     <React.Fragment>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div className="container">
-          <a className="navbar-brand" href="#">
+          <a className="navbar-brand" href="/">
             Events Page
           </a>
           <div>

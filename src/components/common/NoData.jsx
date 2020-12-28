@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 //display when no  event is available
 const NoData = () => {

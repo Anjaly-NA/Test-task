@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -7,6 +7,8 @@ import AddEvent from "./AddEvent";
 import Modal from "@material-ui/core/Modal";
 import Blogs from "../Blogs";
 import Footer from "../Footer";
+import { connect } from "react-redux";
+import { addEventHidden, addEventVisible } from "../../redux";
 
 const useStyles = makeStyles((theme) => ({
   text: {
@@ -31,14 +33,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //adding and listing of event component
-const Event = () => {
+const Event = (props) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const [singleBlog, setSingleBlog] = useState({});
+  const [eventId, setEventId] = useState("");
   const handleClose = () => {
-    setOpen(false);
+    // setOpen(false);
+    props.addEventHidden();
   };
   const handleOpen = () => {
-    setOpen(true);
+    // setOpen(true);/
+    setSingleBlog({});
+    setEventId('');
+    props.addEventVisible();
+  };
+  const getSingleBlog = (passedBlog, eventId) => {
+    setSingleBlog(passedBlog);
+    setEventId(eventId);
   };
   return (
     <React.Fragment>
@@ -57,10 +69,10 @@ const Event = () => {
         </Grid>
       </Grid>
       <div className="card-container">
-        <Blogs />
+        <Blogs getSingleBlog={getSingleBlog} />
       </div>
       <Modal
-        open={open}
+        open={props.addEventBox}
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
@@ -70,10 +82,28 @@ const Event = () => {
           justifyContent: "center",
         }}
       >
-        <AddEvent onClose={handleClose} />
+        <AddEvent
+          onClose={handleClose}
+          singleBlog={singleBlog}
+          eventId={eventId}
+        />
       </Modal>
       <Footer />
     </React.Fragment>
   );
 };
-export default Event;
+
+const MapStateToProps = (state) => {
+  return { addEventBox: state.addEventBox };
+};
+
+const MapDispatchToProps = (dispatch) => {
+  return {
+    addEventHidden: () => dispatch(addEventHidden()),
+    addEventVisible: () => dispatch(addEventVisible()),
+  };
+};
+
+export default connect(MapStateToProps, MapDispatchToProps)(Event);
+
+// export default Event;

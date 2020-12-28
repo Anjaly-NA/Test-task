@@ -1,7 +1,7 @@
 import firebase from "firebase";
 import "firebase/auth";
 import "firebase/firestore";
-import { ref } from "yup";
+import "firebase/storage";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -20,8 +20,14 @@ class Firebase {
     this.auth = firebase.auth();
     this.db = firebase.firestore();
   }
+  async uploadImage(fileName, file) {
+    const storageRef = firebase.storage().ref();
+    const fileRef = storageRef.child(fileName);
+    await fileRef.put(file);
+    return await fileRef.getDownloadURL();
+  }
   //adding event details to the firebase
-  addEvents(title, description, date) {
+  addEvents(title, description, date, fileUrl) {
     if (this.auth.currentUser && this.auth.currentUser.uid !== null) {
       var userId = this.auth.currentUser.uid;
     }
@@ -30,16 +36,32 @@ class Firebase {
       title,
       description,
       date,
+      file: fileUrl,
     };
     eventRef.push(event);
   }
-  //retrieve event details 
+  updateEvent(title, description, date, fileUrl, eventId) {
+    if (this.auth.currentUser && this.auth.currentUser.uid !== null) {
+      var userId = this.auth.currentUser.uid;
+    }
+    const eventRef = firebase.database().ref("Event/" + userId);
+    eventRef.child(eventId).update({ title, description, date, file: fileUrl });
+  }
+
+  async editEvent(eventId) {
+    var userId = this.auth.currentUser.uid;
+    const response = await firebase
+      .database()
+      .ref("/Event/" + userId + "/" + eventId);
+    return response;
+  }
+  //retrieve event details
   getEvents() {
     //if user is logged in show users' event
     if (this.auth.currentUser && this.auth.currentUser.uid !== null) {
       var userId = this.auth.currentUser.uid;
       return firebase.database().ref("/Event/" + userId);
-    } 
+    }
     //if user is not logged in show every event
     else {
       return firebase.database().ref("Event");
