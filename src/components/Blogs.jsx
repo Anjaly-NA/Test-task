@@ -13,6 +13,7 @@ import {
 import { connect } from "react-redux";
 import CircularSpin from "./common/CircularSpin";
 import Button from "@material-ui/core/Button";
+import ConfirmationPopup from "./common/ConfirmationPopup";
 
 const Blogs = (props) => {
   const [blogs, setBlogs] = useState([]);
@@ -20,6 +21,9 @@ const Blogs = (props) => {
   const itemPerPage = 2;
   const [pageCount, setpageCount] = useState(0);
   const [spinner, setSpinner] = useState(true);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(false);
+  const [eventId, setEventId] = useState(null);
 
   const handleChange = (event, value) => {
     setCurrentPage(value);
@@ -72,10 +76,20 @@ const Blogs = (props) => {
     const eventRef = await firebase.editEvent(eventId);
     eventRef.on("value", (snapshot) => {
       const blog = snapshot.val();
-      var mimeString = blog.file.split(',')[0].split(':')[1].split(';')[0];
-      console.log(mimeString,'nlog')
-      props.getSingleBlog(blog,eventId);
+      props.getSingleBlog(blog, eventId);
     });
+  };
+  const handleDelete = (eventIdPassed) => {
+    setEventId(eventIdPassed);
+    setDeleteConfirm(true);
+    setDeleteMessage("Are you sure want to delete?");
+  };
+  const handleYes = () => {
+    firebase.deleteEvent(eventId);
+    setDeleteConfirm(false);
+  };
+  const handleNo = () => {
+    setDeleteConfirm(false);
   };
 
   const indexOfLastTodo = currentPage * itemPerPage;
@@ -84,6 +98,14 @@ const Blogs = (props) => {
 
   return (
     <React.Fragment>
+      <ConfirmationPopup
+        response={deleteConfirm}
+        handleYes={handleYes}
+        handleNo={handleNo}
+        responseMessage={deleteMessage}
+        yesButtonText="Yes"
+        noButtonText="No"
+      />
       <div className="container">
         <div className="row min-vh-100">
           <div className="col-md-8">
@@ -116,14 +138,24 @@ const Blogs = (props) => {
                           <div className="card-footer text-muted">
                             Event date {blog.items.date}
                             {firebase.getCurrentUsername() && (
-                              <Button
-                                size="medium"
-                                variant="contained"
-                                onClick={() => handleEdit(blog.eventid)}
-                                className="btn-edit"
-                              >
-                                Edit Event
-                              </Button>
+                              <div className="btn-container">
+                                <Button
+                                  size="medium"
+                                  variant="contained"
+                                  onClick={() => handleEdit(blog.eventid)}
+                                  className="btn-edit"
+                                >
+                                  Edit Event
+                                </Button>
+                                <Button
+                                  size="medium"
+                                  variant="contained"
+                                  onClick={() => handleDelete(blog.eventid)}
+                                  className="btn-edit"
+                                >
+                                  Delete Event
+                                </Button>
+                              </div>
                             )}
                           </div>
                         </div>

@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ConfirmationPopup = (props) => {
-    const classes = useStyles();
+  const classes = useStyles();
   return (
     <React.Fragment>
       <Modal
@@ -32,17 +32,30 @@ const ConfirmationPopup = (props) => {
           alignItems: "center",
           justifyContent: "center",
         }}
+        {...props}
       >
         <div className={classes.paper}>
           <p id="simple-modal-description">{props.responseMessage}</p>
-          <Button
-            size="medium"
-            variant="contained"
-            className={classes.text}
-            onClick={props.handleOk}
-          >
-            OK
-          </Button>
+          <div className="btn-container">
+            <Button
+              size="medium"
+              variant="contained"
+              className={classes.text}
+              onClick={props.handleOk || props.handleYes}
+            >
+              {props.okButtonText} {props.yesButtonText}
+            </Button>
+            {props.noButtonText && (
+              <Button
+                size="medium"
+                variant="contained"
+                className={classes.text}
+                onClick={props.handleNo}
+              >
+                {props.noButtonText}
+              </Button>
+            )}
+          </div>
         </div>
       </Modal>
     </React.Fragment>

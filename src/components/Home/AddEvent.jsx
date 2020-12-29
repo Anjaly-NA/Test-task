@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import firebase from "../../firebase";
@@ -49,7 +49,6 @@ const AddEvent = (props) => {
     props.setSpinnerTrue();
     const file = values.file;
     const fileUrl = await firebase.uploadImage(file.name, file);
-    console.log(fileUrl, "fileUrl");
     try {
       if (props.eventId) {
         firebase.updateEvent(
@@ -96,6 +95,7 @@ const AddEvent = (props) => {
         response={eventAddResponse}
         handleOk={handleOk}
         responseMessage={responseMessage}
+        okButtonText="OK"
       />
       <Formik
         initialValues={props.singleBlog || initialValues}
@@ -233,7 +233,6 @@ const AddEvent = (props) => {
                         onChange={(event) =>
                           handleDisplayImage(event, setFieldValue)
                         }
-                        // onBlur={handleBlur}
                         className={
                           errors.file && touched.file
                             ? "is-invalid form-control height-auto"

@@ -48,6 +48,14 @@ class Firebase {
     eventRef.child(eventId).update({ title, description, date, file: fileUrl });
   }
 
+  deleteEvent = (eventId) => {
+    if (this.auth.currentUser && this.auth.currentUser.uid !== null) {
+      var userId = this.auth.currentUser.uid;
+    }
+    const eventRef = firebase.database().ref("Event/" + userId);
+    eventRef.child(eventId).remove();
+  };
+
   async editEvent(eventId) {
     var userId = this.auth.currentUser.uid;
     const response = await firebase

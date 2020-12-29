@@ -21,9 +21,14 @@
 }
 .btn-edit {
   background-color: dodgerblue !important;
-  margin-left: 20px !important;
+  text-transform: none !important;
+  height: 30px;
 }
 .scroll-height {
   height: 560px;
   overflow: scroll;
+}
+.btn-container{
+  display: flex;
+  justify-content: space-evenly;
 }
