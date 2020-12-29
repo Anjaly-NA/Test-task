@@ -233,7 +233,6 @@ const AddEvent = (props) => {
                         onChange={(event) =>
                           handleDisplayImage(event, setFieldValue)
                         }
-                        onLoad={setFieldValue(values.file)}
                         // onBlur={handleBlur}
                         className={
                           errors.file && touched.file
