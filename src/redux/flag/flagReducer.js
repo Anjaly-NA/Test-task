@@ -4,11 +4,13 @@ import { ADD_EVENT_VISIBLE } from "./flagTypes";
 import { ADD_EVENT_HIDDEN } from "./flagTypes";
 import { SET_EVENT_VALUE } from "./flagTypes";
 import { UNSET_EVENT_VALUE } from "./flagTypes";
+import { SET_BLOG_COUNT } from "./flagTypes";
 
 const initialState = {
   spinnerValue: false,
   addEventBox: false,
   editEventValue: {},
+  blogCount: 0,
 };
 const flagReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -24,6 +26,8 @@ const flagReducer = (state = initialState, action) => {
       return { ...state, editEventValue: action.payload };
     case UNSET_EVENT_VALUE:
       return { ...state, editEventValue: false };
+    case SET_BLOG_COUNT:
+      return { ...state, blogCount: action.payload };
     default:
       return state;
   }

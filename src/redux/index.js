@@ -4,3 +4,4 @@ export { addEventHidden } from "./flag/flagActions";
 export { setSpinnerTrue } from "./flag/flagActions";
 export { setEventValue } from "./flag/flagActions";
 export { unsetEventValue } from "./flag/flagActions";
+export { setBlogCount } from "./flag/flagActions";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import firebase from "../../firebase";
@@ -74,6 +74,7 @@ const AddEvent = (props) => {
       } else {
         setResponseMessage("Event Added Successfully");
       }
+      props.child1Method_ref.current();
     } catch (error) {
       setEventAddResponse(true);
       setResponseMessage(error.message);
@@ -267,7 +268,7 @@ const AddEvent = (props) => {
                       }
                       disabled={!(dirty && isValid)}
                     >
-                      Add Event
+                      {props.eventId ? "Edit Event" : "Add Event"}
                     </button>
                   </form>
                 </section>

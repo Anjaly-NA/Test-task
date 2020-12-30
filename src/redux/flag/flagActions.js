@@ -5,6 +5,7 @@ import {
   ADD_EVENT_HIDDEN,
   SET_EVENT_VALUE,
   UNSET_EVENT_VALUE,
+  SET_BLOG_COUNT,
 } from "./flagTypes";
 
 export const setSpinnerFalse = () => {
@@ -36,5 +37,11 @@ export const setEventValue = (value = {}) => {
 export const unsetEventValue = () => {
   return {
     type: UNSET_EVENT_VALUE,
+  };
+};
+export const setBlogCount = (value) => {
+  return {
+    type: SET_BLOG_COUNT,
+    payload: value,
   };
 };

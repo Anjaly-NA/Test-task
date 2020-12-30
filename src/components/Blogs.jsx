@@ -9,9 +9,11 @@ import {
   addEventVisible,
   unsetEventValue,
   setEventValue,
+  setBlogCount,
 } from "../redux";
 import { connect } from "react-redux";
 import CircularSpin from "./common/CircularSpin";
+import SearchBar from "./common/SearchBar";
 import Button from "@material-ui/core/Button";
 import ConfirmationPopup from "./common/ConfirmationPopup";
 
@@ -29,6 +31,11 @@ const Blogs = (props) => {
     setCurrentPage(value);
   };
   useEffect(() => {
+    props.child1Method_ref.current = listAllEvent;
+    listAllEvent();
+  },[]);
+
+  const listAllEvent = () => {
     const eventRef = firebase.getEvents();
     //listing the events for particular user if the user is logged in
     if (firebase.getCurrentUsername()) {
@@ -41,13 +48,7 @@ const Blogs = (props) => {
             blogs.push({ eventid: key, items: value });
           });
         }
-        // for (let id in blog) {
-        //   blog.eventid = id;
-        //   blogs.push(blog[id]);
-        // }
-        setBlogs(blogs);
-        setpageCount(Math.ceil(blogs.length / itemPerPage));
-        setSpinner(false);
+        setEventList(blogs);
       });
     }
     //if user is not logged in, on landing page show every users' events
@@ -56,20 +57,22 @@ const Blogs = (props) => {
         const blogs = [];
         snapshot.forEach(function (childSnapshot) {
           var blog = childSnapshot.val();
-          // for (let id in blog) {
-          //   blogs.push(blog[id]);
-          // }
           let keys = Object.entries(blog);
           keys.forEach(([key, value]) => {
             blogs.push({ eventid: key, items: value });
           });
         });
-        setBlogs(blogs);
-        setpageCount(Math.ceil(blogs.length / itemPerPage));
-        setSpinner(false);
+        setEventList(blogs);
       });
     }
-  }, []);
+  };
+  const setEventList = (blogs) => {
+    setBlogs(blogs);
+    setCurrentPage(1);
+    setpageCount(Math.ceil(blogs.length / itemPerPage));
+    setSpinner(false);
+    props.setBlogCount(blogs.length);
+  };
 
   const handleEdit = async (eventId) => {
     props.addEventVisible();
@@ -86,10 +89,34 @@ const Blogs = (props) => {
   };
   const handleYes = () => {
     firebase.deleteEvent(eventId);
+    listAllEvent();
     setDeleteConfirm(false);
   };
   const handleNo = () => {
     setDeleteConfirm(false);
+  };
+  const setEventFromChildToParent = (passedEventName) => {
+    if (passedEventName === "") {
+      listAllEvent();
+    } else {
+      searchEventDetails(passedEventName);
+    }
+  };
+  const searchEventDetails = (passedEventName) => {
+    const eventRef = firebase.searchEvent(passedEventName);
+    if (firebase.getCurrentUsername()) {
+      eventRef.on("value", (snapshot) => {
+        const blog = snapshot.val();
+        const blogs = [];
+        if (blog !== null) {
+          let keys = Object.entries(blog);
+          keys.forEach(([key, value]) => {
+            blogs.push({ eventid: key, items: value });
+          });
+        }
+        setEventList(blogs);
+      });
+    }
   };
 
   const indexOfLastTodo = currentPage * itemPerPage;
@@ -108,6 +135,10 @@ const Blogs = (props) => {
       />
       <div className="container">
         <div className="row min-vh-100">
+          <SearchBar
+            events={blogs}
+            setEventFromChildToParent={setEventFromChildToParent}
+          />
           <div className="col-md-8">
             <h1 className="my-4">Related Events</h1>
             {spinner ? (
@@ -189,6 +220,7 @@ const MapStateToProps = (state) => {
     spinnerValue: state.spinnerValue,
     addEventBox: state.addEventBox,
     editEventValue: state.editEventValue,
+    blogCount: state.blogCount,
   };
 };
 
@@ -200,6 +232,7 @@ const MapDispatchToProps = (dispatch) => {
     addEventVisible: () => dispatch(addEventVisible()),
     setEventValue: (value) => dispatch(setEventValue(value)),
     unsetEventValue: () => dispatch(unsetEventValue()),
+    setBlogCount: (value) => dispatch(setBlogCount(value)),
   };
 };
 

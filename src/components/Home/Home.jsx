@@ -10,9 +10,13 @@ import { useHistory } from "react-router";
 import firebase from "../../firebase";
 import Event from "./Event";
 import Avatar from "@material-ui/core/Avatar";
+import Badge from "@material-ui/core/Badge";
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import { setBlogCount } from "../../redux";
+import { connect } from "react-redux";
 
 //home page of user contains username, logout menu and event component
-const Home = () => {
+const Home = (props) => {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const history = useHistory();
@@ -62,6 +66,9 @@ const Home = () => {
           <a className="navbar-brand" href="/">
             Events Page
           </a>
+          <Badge badgeContent={props.blogCount} color="secondary">
+            <EventAvailableIcon style={{ color: "white" }} />
+          </Badge>
           <div>
             <Button
               ref={anchorRef}
@@ -70,7 +77,7 @@ const Home = () => {
               onClick={handleToggle}
             >
               <Avatar src="/broken-image.jpg" />
-              <div className='username'>{firebase.getCurrentUsername()}</div>
+              <div className="username">{firebase.getCurrentUsername()}</div>
             </Button>
             <Popper
               open={open}
@@ -108,4 +115,15 @@ const Home = () => {
     </React.Fragment>
   );
 };
-export default Home;
+const MapStateToProps = (state) => {
+  return {
+    blogCount: state.blogCount,
+  };
+};
+
+const MapDispatchToProps = (dispatch) => {
+  return {
+    setBlogCount: (value) => dispatch(setBlogCount(value)),
+  };
+};
+export default connect(MapStateToProps, MapDispatchToProps)(Home);

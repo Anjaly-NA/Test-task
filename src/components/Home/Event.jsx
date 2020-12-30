@@ -38,6 +38,8 @@ const Event = (props) => {
   // const [open, setOpen] = useState(false);
   const [singleBlog, setSingleBlog] = useState({});
   const [eventId, setEventId] = useState("");
+  const child1Method_ref = React.useRef(null);
+
   const handleClose = () => {
     // setOpen(false);
     props.addEventHidden();
@@ -45,7 +47,7 @@ const Event = (props) => {
   const handleOpen = () => {
     // setOpen(true);/
     setSingleBlog({});
-    setEventId('');
+    setEventId("");
     props.addEventVisible();
   };
   const getSingleBlog = (passedBlog, eventId) => {
@@ -69,7 +71,10 @@ const Event = (props) => {
         </Grid>
       </Grid>
       <div className="card-container">
-        <Blogs getSingleBlog={getSingleBlog} />
+        <Blogs
+          getSingleBlog={getSingleBlog}
+          child1Method_ref={child1Method_ref}
+        />
       </div>
       <Modal
         open={props.addEventBox}
@@ -86,6 +91,7 @@ const Event = (props) => {
           onClose={handleClose}
           singleBlog={singleBlog}
           eventId={eventId}
+          child1Method_ref={child1Method_ref}
         />
       </Modal>
       <Footer />

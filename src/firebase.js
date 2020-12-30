@@ -56,6 +56,16 @@ class Firebase {
     eventRef.child(eventId).remove();
   };
 
+  searchEvent = (title) => {
+    if (this.auth.currentUser && this.auth.currentUser.uid !== null) {
+      var userId = this.auth.currentUser.uid;
+      return firebase
+        .database()
+        .ref("Event/" + userId)
+        .orderByChild("title")
+        .equalTo(title);
+    }
+  };
   async editEvent(eventId) {
     var userId = this.auth.currentUser.uid;
     const response = await firebase
