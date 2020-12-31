@@ -11,7 +11,7 @@ import firebase from "../../firebase";
 import Event from "./Event";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
-import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import EventAvailableIcon from "@material-ui/icons/EventAvailable";
 import { setBlogCount } from "../../redux";
 import { connect } from "react-redux";
 

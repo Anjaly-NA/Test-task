@@ -16,6 +16,7 @@ import CircularSpin from "./common/CircularSpin";
 import SearchBar from "./common/SearchBar";
 import Button from "@material-ui/core/Button";
 import ConfirmationPopup from "./common/ConfirmationPopup";
+import Sort from "./common/Sort";
 
 const Blogs = (props) => {
   const [blogs, setBlogs] = useState([]);
@@ -33,7 +34,7 @@ const Blogs = (props) => {
   useEffect(() => {
     props.child1Method_ref.current = listAllEvent;
     listAllEvent();
-  },[]);
+  }, []);
 
   const listAllEvent = () => {
     const eventRef = firebase.getEvents();
@@ -95,6 +96,18 @@ const Blogs = (props) => {
   const handleNo = () => {
     setDeleteConfirm(false);
   };
+  const setSortData = (passedSortData) => {
+    const eventRef = firebase.sortEvents(passedSortData);
+    if (firebase.getCurrentUsername()) {
+      eventRef.on("value", (snapshot) => {
+        const blogs = [];
+        snapshot.forEach(function (child) {
+          blogs.push({ eventid: child.key, items: child.val() });
+        });
+        setEventList(blogs);
+      });
+    }
+  };
   const setEventFromChildToParent = (passedEventName) => {
     if (passedEventName === "") {
       listAllEvent();
@@ -135,10 +148,13 @@ const Blogs = (props) => {
       />
       <div className="container">
         <div className="row min-vh-100">
-          <SearchBar
-            events={blogs}
-            setEventFromChildToParent={setEventFromChildToParent}
-          />
+          <div>
+            <SearchBar
+              events={blogs}
+              setEventFromChildToParent={setEventFromChildToParent}
+            />
+            <Sort setSortData={setSortData} />
+          </div>
           <div className="col-md-8">
             <h1 className="my-4">Related Events</h1>
             {spinner ? (

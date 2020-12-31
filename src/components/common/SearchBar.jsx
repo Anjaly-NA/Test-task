@@ -28,7 +28,11 @@ const SearchBar = (props) => {
           renderOption={(option) => (
             <React.Fragment>
               <span>
-                <img src={option.items.file} className="img-suggestions" alt='logo'/>
+                <img
+                  src={option.items.file}
+                  className="img-suggestions"
+                  alt="logo"
+                />
               </span>
               {option.items.title}
             </React.Fragment>

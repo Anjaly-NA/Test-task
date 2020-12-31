@@ -66,6 +66,15 @@ class Firebase {
         .equalTo(title);
     }
   };
+  sortEvents = (sortField) => {
+    if (this.auth.currentUser && this.auth.currentUser.uid !== null) {
+      var userId = this.auth.currentUser.uid;
+      return firebase
+        .database()
+        .ref("Event/" + userId)
+        .orderByChild(sortField);
+    }
+  };
   async editEvent(eventId) {
     var userId = this.auth.currentUser.uid;
     const response = await firebase

@@ -36,3 +36,6 @@
   width:25px;
   margin-right: 15px;
 }
+.form-control-sort{
+  min-width: 120px !important;
+}
