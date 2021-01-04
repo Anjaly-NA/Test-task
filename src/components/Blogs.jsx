@@ -32,7 +32,7 @@ const Blogs = (props) => {
     setCurrentPage(value);
   };
   useEffect(() => {
-    props.child1Method_ref.current = listAllEvent;
+    // props.child1Method_ref.current = listAllEvent;
     listAllEvent();
   }, []);
 
@@ -149,11 +149,15 @@ const Blogs = (props) => {
       <div className="container">
         <div className="row min-vh-100">
           <div>
-            <SearchBar
-              events={blogs}
-              setEventFromChildToParent={setEventFromChildToParent}
-            />
-            <Sort setSortData={setSortData} />
+            {firebase.getCurrentUsername() && (
+              <>
+                <SearchBar
+                  events={blogs}
+                  setEventFromChildToParent={setEventFromChildToParent}
+                />
+                <Sort setSortData={setSortData} />
+              </>
+            )}
           </div>
           <div className="col-md-8">
             <h1 className="my-4">Related Events</h1>
