@@ -16,7 +16,7 @@ const SignUpSchema = Yup.object().shape({
   date: Yup.date()
     .min(new Date(), "Past dates cannot be allowed")
     .required("Choose a valid date"),
-  file: Yup.mixed().required(),
+  // file: Yup.mixed().required(),
 });
 
 const initialValues = {
@@ -47,8 +47,11 @@ const AddEvent = (props) => {
    */
   const submitForm = async (values) => {
     props.setSpinnerTrue();
-    const file = values.file;
-    const fileUrl = await firebase.uploadImage(file.name, file);
+    const file = values.file ? values.file : "";
+    var fileUrl = "";
+    if (values.file) {
+      fileUrl = await firebase.uploadImage(file.name, file);
+    }
     try {
       if (props.eventId) {
         firebase.updateEvent(
@@ -246,7 +249,9 @@ const AddEvent = (props) => {
                         </small>
                       ) : (
                         <small id="emailHelp" className="form-text text-muted">
-                          Upload image.
+                          {!props.singleBlog.file
+                            ? "Upload Image"
+                            : "Edit Image"}{" "}
                         </small>
                       )}
                       {(props.singleBlog.file || displayImg) && (
