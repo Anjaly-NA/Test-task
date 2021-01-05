@@ -115,14 +115,26 @@ class Firebase {
     email,
     password
   ) {
-    await this.auth.createUserWithEmailAndPassword(email, password);
-    return this.auth.currentUser.updateProfile({
-      displayName: firstName + " " + lastName,
-      phoneNumber: phoneNumber,
-      acceptTerms: acceptTerms,
-      email: email,
-      password: password,
-    });
+    await this.auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((user) => {
+        const displayName = firstName + " " + lastName;
+        return this.auth.currentUser.updateProfile({ displayName });
+      })
+      .then(() => {
+        return this.db
+          .collection("users")
+          .doc(this.auth.currentUser.uid)
+          .set({ phoneNumber: phoneNumber, acceptTerms: acceptTerms });
+      })
+      .catch((error) => console.error("Error: ", error));
+    // return this.auth.currentUser.updateProfile({
+    //   displayName: firstName + " " + lastName,
+    //   phoneNumber: phoneNumber,
+    //   acceptTerms: acceptTerms,
+    //   email: email,
+    //   password: password,
+    // });
   }
   isInitialized() {
     return new Promise((resolve) => {
@@ -132,6 +144,28 @@ class Firebase {
   //get current username from firebase
   getCurrentUsername() {
     return this.auth.currentUser && this.auth.currentUser.displayName;
+  }
+  async getCurrentUserInfo() {
+    var userId = this.auth.currentUser.uid;
+    const userRef = this.db.collection('users').doc(userId);
+    const doc = await userRef.get();
+    if (!doc.exists) {
+      console.log('No such document!');
+    } else {
+      console.log('Document data:', doc.data());
+    }
+
+    // return this.db
+    //   .collection("users")
+    //   .doc(userId)
+    //   .get()
+    //   .then((resp) => {
+    //     console.log(resp);
+    //     let keys = Object.entries(resp);
+    //     keys.forEach((item) => {
+    //       console.log(item, "itemm");
+    //     });
+    //   });
   }
 }
 export default new Firebase();

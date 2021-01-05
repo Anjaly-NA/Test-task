@@ -70,6 +70,7 @@ const Registration = (props) => {
         response={registerResponse}
         handleOk={handleMessage}
         responseMessage={responseMessage}
+        okButtonText="OK"
       />
       <Formik
         initialValues={initialValues}

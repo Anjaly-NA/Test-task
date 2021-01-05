@@ -49,7 +49,7 @@ const AddEvent = (props) => {
     props.setSpinnerTrue();
     const file = values.file ? values.file : "";
     var fileUrl = "";
-    if (values.file) {
+    if (values.file && typeof values.file !== "string") {
       fileUrl = await firebase.uploadImage(file.name, file);
     }
     try {
@@ -77,7 +77,7 @@ const AddEvent = (props) => {
       } else {
         setResponseMessage("Event Added Successfully");
       }
-      props.child1Method_ref.current();
+      // props.child1Method_ref.current();
     } catch (error) {
       setEventAddResponse(true);
       setResponseMessage(error.message);
